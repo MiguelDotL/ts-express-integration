@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.del = exports.put = exports.patch = exports.post = exports.get = exports.routeBinder = void 0;
+exports.all = exports.patch = exports.del = exports.put = exports.post = exports.get = exports.routeBinder = void 0;
 require("reflect-metadata");
+const HttpMethods_1 = require("./HttpMethods");
 function routeBinder(method) {
     return function (path) {
         return function (target, key, desc) {
@@ -11,8 +12,10 @@ function routeBinder(method) {
     };
 }
 exports.routeBinder = routeBinder;
-exports.get = routeBinder('get');
-exports.post = routeBinder('post');
-exports.patch = routeBinder('put');
-exports.put = routeBinder('put');
-exports.del = routeBinder('delete');
+const { GET, POST, PUT, DELETE, PATCH, ALL } = HttpMethods_1.HttpMethods;
+exports.get = routeBinder(GET);
+exports.post = routeBinder(POST);
+exports.put = routeBinder(PUT);
+exports.del = routeBinder(DELETE);
+exports.patch = routeBinder(PATCH);
+exports.all = routeBinder(ALL);
