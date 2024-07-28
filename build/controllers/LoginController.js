@@ -12,14 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const decorators_1 = require("./decorators");
 const Helpers_1 = require("../Helpers");
 let LoginController = class LoginController {
-    // @use(httpLogger)
     getLogin(req, res) {
         res.send(`
             <form method="post">
                 <div>
                     <label>Email</label>
                     <input type="email" name="email" required />
-                </div>
                 <div>
                     <label>Password</label>
                     <input type="password" name="password" required />
@@ -50,17 +48,15 @@ let LoginController = class LoginController {
     }
 };
 __decorate([
-    (0, decorators_1.get)('/login')
-    // @use(httpLogger)
-    ,
+    (0, decorators_1.get)('/login'),
+    (0, decorators_1.use)(Helpers_1.httpLogger),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], LoginController.prototype, "getLogin", null);
 __decorate([
-    (0, decorators_1.post)('/login')
-    // @use(httpLogger)
-    ,
+    (0, decorators_1.post)('/login'),
+    (0, decorators_1.use)(Helpers_1.httpLogger),
     (0, decorators_1.bodyValidator)('email', 'password')
     // postLogin(req: RequestWithBody, res: Response) {
     ,

@@ -5,14 +5,13 @@ import { httpLogger, RequestWithBody, adminUser } from '../Helpers';
 @controller('/auth')
 class LoginController {
     @get('/login')
-    // @use(httpLogger)
+    @use(httpLogger)
     getLogin(req: Request, res: Response): void {
         res.send(`
             <form method="post">
                 <div>
                     <label>Email</label>
                     <input type="email" name="email" required />
-                </div>
                 <div>
                     <label>Password</label>
                     <input type="password" name="password" required />
@@ -23,7 +22,7 @@ class LoginController {
     }
 
     @post('/login')
-    // @use(httpLogger)
+    @use(httpLogger)
     @bodyValidator('email', 'password')
     // postLogin(req: RequestWithBody, res: Response) {
     postLogin(req: Request, res: Response) {
