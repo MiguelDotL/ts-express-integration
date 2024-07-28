@@ -14,7 +14,8 @@ function controller(routePrefix) {
             const routeHandler = target.prototype[key];
             const path = Reflect.getMetadata(MetadataKeys_1.MetadataKeys.PATH, target.prototype, key);
             const method = Reflect.getMetadata(MetadataKeys_1.MetadataKeys.METHOD, target.prototype, key);
-            path && exports.router[method](`${routePrefix}${path}`, routeHandler);
+            const middlewares = Reflect.getMetadata(MetadataKeys_1.MetadataKeys.MIDDLEWARE, target.prototype, key) || [];
+            path && exports.router[method](`${routePrefix}${path}`, ...middlewares, routeHandler);
         });
     };
 }
