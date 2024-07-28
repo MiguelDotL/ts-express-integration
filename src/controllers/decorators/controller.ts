@@ -1,12 +1,31 @@
 import 'reflect-metadata';
-import express from 'express';
+import { AppRouter } from '../../AppRouter';
 import { HttpMethods } from './HttpMethods';
 import { MetadataKeys } from './MetadataKeys';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
-export const router = express.Router();
+function bodyValidators(keys: string): RequestHandler {
+    return function (req: Request, res: Response, next: NextFunction) {
+        if (!req.body) {
+            res.status(422).send('Invalid request');
+            return;
+        }
+
+        for (let key of keys) {
+            if (!req.body[key]) {
+                res.status(422).send(`Missing required field: ${key}`);
+                return;
+            }
+        }
+
+        next();
+    };
+}
 
 export function controller(routePrefix: string) {
     return function (target: Function) {
+        const router = AppRouter.getInstance();
+
         Object.getOwnPropertyNames(target.prototype).forEach((key) => {
             const routeHandler = target.prototype[key];
             const path = Reflect.getMetadata(MetadataKeys.PATH, target.prototype, key);
@@ -17,8 +36,16 @@ export function controller(routePrefix: string) {
             );
             const middlewares =
                 Reflect.getMetadata(MetadataKeys.MIDDLEWARE, target.prototype, key) || [];
-
-            path && router[method](`${routePrefix}${path}`, ...middlewares, routeHandler);
+            const requiredBodyProps =
+                Reflect.getMetadata(MetadataKeys.VALIDATOR, target.prototype, key) || [];
+            const validator = bodyValidators(requiredBodyProps);
+            path &&
+                router[method](
+                    `${routePrefix}${path}`,
+                    ...middlewares,
+                    validator,
+                    routeHandler
+                );
         });
     };
 }
