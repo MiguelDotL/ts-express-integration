@@ -4,6 +4,25 @@ exports.all = exports.patch = exports.del = exports.put = exports.post = exports
 require("reflect-metadata");
 const HttpMethods_1 = require("./HttpMethods");
 const MetadataKeys_1 = require("./MetadataKeys");
+/**
+ * A higher-order function that binds a specific HTTP method to a route path.
+ * This function is used as a decorator to annotate class methods with route information.
+ *
+ * @param method - The HTTP method to be associated with the route.
+ * @returns A function that takes a path parameter and returns a decorator function.
+ *
+ * @example
+ * ```typescript
+ * const { get } = require('./routeBinder');
+ *
+ * class MyController {
+ *     @get('/users')
+ *     getUsers(req: Request, res: Response) {
+ *         // Handle GET request for /users route
+ *     }
+ * }
+ * ```
+ */
 function routeBinder(method) {
     return function (path) {
         return function (target, key, desc) {

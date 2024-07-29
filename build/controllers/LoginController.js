@@ -12,28 +12,52 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const decorators_1 = require("./decorators");
 const Helpers_1 = require("../Helpers");
 let LoginController = class LoginController {
+    /**
+     * Handles the GET request for the login page.
+     *
+     * @remarks
+     * This function renders a login form to the user. The form includes fields for email and password.
+     *
+     * @param req - The Express request object.
+     * @param res - The Express response object.
+     *
+     * @returns {void} - This function does not return a value.
+     */
     getLogin(req, res) {
         res.send(`
-            <form method="post">
-                <div>
-                    <label>Email</label>
-                    <input type="email" name="email" required />
-                <div>
-                    <label>Password</label>
-                    <input type="password" name="password" required />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        `);
+        <form method="post">
+            <div>
+                <label>Email</label>
+                <input type="email" name="email" required />
+            <div>
+                <label>Password</label>
+                <input type="password" name="password" required />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    `);
     }
-    // postLogin(req: RequestWithBody, res: Response) {
+    /**
+     * Handles the POST request for logging in the user.
+     *
+     * This function authenticates the user's credentials and sets the session if successful.
+     * If the credentials are invalid, it sends a message indicating the error.
+     *
+     * @remarks
+     * The function uses the `bodyValidator` decorator to validate the request body for the presence of 'email' and 'password'.
+     *
+     * @param req - The Express request object containing the user's email and password in the request body.
+     * @param res - The Express response object used to send a response to the client.
+     *
+     * @returns {void} - This function does not return a value.
+     */
     postLogin(req, res) {
-        // postLogin(req: RequestWithBody, res: Response) {
         const { email, password } = req.body;
-        if (email &&
+        const isAdminUser = email &&
             password &&
             email === Helpers_1.adminUser.email &&
-            password === Helpers_1.adminUser.password) {
+            password === Helpers_1.adminUser.password;
+        if (isAdminUser) {
             req.session = { loggedIn: true };
             res.redirect('/');
         }
@@ -41,6 +65,17 @@ let LoginController = class LoginController {
             res.send('Invalid email or password');
         }
     }
+    /**
+     * Handles the GET request for logging out the user.
+     *
+     * @remarks
+     * This function clears the user's session and redirects them to the home page.
+     *
+     * @param req - The Express request object.
+     * @param res - The Express response object.
+     *
+     * @returns {void} - This function does not return a value.
+     */
     getLogout(req, res) {
         const loggedOut = undefined;
         req.session = loggedOut;
@@ -57,9 +92,7 @@ __decorate([
 __decorate([
     (0, decorators_1.post)('/login'),
     (0, decorators_1.use)(Helpers_1.httpLogger),
-    (0, decorators_1.bodyValidator)('email', 'password')
-    // postLogin(req: RequestWithBody, res: Response) {
-    ,
+    (0, decorators_1.bodyValidator)('email', 'password'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
